@@ -1,7 +1,8 @@
 package cn.com.twoke.xiaobei_heath.service;
 
 import cn.com.twoke.http.annotation.*;
-import cn.com.twoke.http.type.MethodType;
+import cn.com.twoke.http.annotation.mapping.PostMapping;
+import cn.com.twoke.http.annotation.mapping.RequestMapping;
 import cn.com.twoke.xiaobei_heath.dto.CaptchaImgDTO;
 import cn.com.twoke.xiaobei_heath.dto.LoginDTO;
 import cn.com.twoke.xiaobei_heath.dto.LoginParams;
@@ -27,20 +28,20 @@ public interface XiaoBeiApi {
      * 小北登录
      * @return
      */
-    @Api(value = "/login", method = MethodType.POST)
+    @PostMapping(value = "/login")
     LoginDTO login(@Body LoginParams loginParams);
 
     /**
      * 获取验证码
      * @return
      */
-    @Api(value = "/captchaImage")
+    @RequestMapping(value = "/captchaImage")
     CaptchaImgDTO getCaptchaImage();
 
     /**
      * 温度打卡
      * @return
      */
-    @Api(value = "/student/health", method = MethodType.POST)
+    @PostMapping(value = "/student/health")
     String doHealth(@Body RequestData requestData, @Header(name = "Authorization") String token);
 }

@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -28,9 +29,11 @@ public class XiaoBeiScheduled {
 
     @Autowired
     private XiaoBeiProperties xiaoBeiProperties;
-// 这是因为过了打卡时间 {目前时间未在标准时间之内}
+    @Resource
+    private XiaoBeiApi xiaoBeiApi;
+
 //  0 0 7 * * ? 每天7点定时打卡
-    @Scheduled(cron = "0 44 22 * * ?") // 22:44定时打卡
+    @Scheduled(cron = "0 8 10 * * ?") // 22:44定时打卡
     public void doHeath() {
         XiaoBeiProperties.XiaobeiUser[] users = xiaoBeiProperties.getUsers();
         for (XiaoBeiProperties.XiaobeiUser user : users) {
@@ -40,13 +43,12 @@ public class XiaoBeiScheduled {
     }
 
     public void mockHeath(String username, String password) {
-        XiaoBeiApi face = FaceCreator.getFace(XiaoBeiApi.class);
 //      获取验证码
-        CaptchaImgDTO captchaImage = face.getCaptchaImage();
+        CaptchaImgDTO captchaImage = xiaoBeiApi.getCaptchaImage();
         String code = captchaImage.getShowCode();
         String uuid = captchaImage.getUuid();
 //      登录小北
-        LoginDTO loginDTO = face.login(new LoginParams()
+        LoginDTO loginDTO = xiaoBeiApi.login(new LoginParams()
                 .setUsername(username)
                 .setPassword(Base64.encodeBase64String(password.getBytes()))
                 .setCode(code)
@@ -57,7 +59,7 @@ public class XiaoBeiScheduled {
 //      生成随机温度
         double temperature = new BigDecimal(35.7 + Math.random()).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue();
 //      小北温度打卡
-        face.doHealth(new RequestData()
+        xiaoBeiApi.doHealth(new RequestData()
                 .setTemperature(temperature + "")
                 .setLocation("105.933807,29.320102")
                 .setCoordinates("中国-重庆市-重庆市-永川区")

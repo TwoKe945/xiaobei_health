@@ -39,8 +39,8 @@
         </dependency>
         <dependency>
             <groupId>cn.com.twoke</groupId>
-            <artifactId>http-face</artifactId>
-            <version>1.0.4</version>
+            <artifactId>http-face-spring-boot-starter</artifactId>
+            <version>1.0.6</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
